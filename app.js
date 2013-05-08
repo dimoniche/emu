@@ -10,9 +10,19 @@ var fs   = require('fs');
 // список поддерживаемых приборов
 var TSRV_24 = 0;
 
-// обработчики архивов
+// обработчики архивов ассв
 var type_device = new Array(
     send_archive_tsrv24
+);
+
+// обработчики архивов по модбасу
+var modbus_archive = new Array(
+    send_modbus_archive_tsrv24
+);
+
+// обработчики архивов по модбасу
+var fill_modbus_archive = new Array(
+    fill_modbus_archive_tsrv24
 );
 
 // названия приборов
@@ -20,6 +30,7 @@ var name_device = new Array(
     'VZLJOT 76.30.03.19'
 );
 
+{
 var CRC_ARC_TAB = new Array(
 
     0x0000,0xC0C1,0xC181,0x0140,0xC301,0x03C0,0x0280,0xC241,0xC601,0x06C0,0x0780,0xC741,0x0500,
@@ -43,14 +54,15 @@ var CRC_ARC_TAB = new Array(
     0x8F81,0x4F40,0x8D01,0x4DC0,0x4C80,0x8C41,0x4400,0x84C1,0x8581,0x4540,0x8701,0x47C0,0x4680,
     0x8641,0x8201,0x42C0,0x4380,0x8341,0x4100,0x81C1,0x8081,0x4040
 );
+}
 
 // модбас ответ архивов от тсрв-024м
 {
     var tsrv024_archive = new Array(
-        0x01,0x41,0xAC,
-        0x52,0x9B,0xCD,0x7F,
+        0x01,0x41,0xAC,             //0
+        0x52,0x9B,0xCD,0x7F,        //4
 
-        0x00,0x00,// Tнар
+        0x00,0x00,// Tнар           //8
         0x00,0x00,// Tпит
         0x00,0x00,// Тот
         0x00,0x00,// Тнс
@@ -85,12 +97,12 @@ var CRC_ARC_TAB = new Array(
         0x00,0x00,
         0x00,0x00,
         0x00,0x00,
-        0x20,0x03,
+        0x05,0xA0,
         0x00,0x00,
         0x00,0x00,
 
-        0x00,0x00,// схема
-        0x00,0x00,0x00,0x00,// флаги
+        0x00,0x01,// схема
+        0x00,0x00,0x00,0x01,// флаги
 
         0x00,0x00,0x00,0x00,//W1
         0x00,0x00,0x00,0x00,//W2
@@ -132,7 +144,7 @@ var CRC_ARC_TAB = new Array(
 
     var tsrv024_summ_archive = new Array(
 
-        0x01,0x41,0xAC,
+        0x01,0x41,0x12,
         0x52,0x9B,0xCD,0x7F,
 
         0x00,0x00,0x00,0x00,
@@ -140,8 +152,27 @@ var CRC_ARC_TAB = new Array(
 
         0x00,0x00,
         0x00,0x00,
-        0x00,0x00
 
+        0x64,0x3d,  //crc
+        0x00,0x00   //crc
+
+    );
+
+    var tsrv24_itog_archive = new Array(
+        0x01,0x41,0x4E,
+        0x51,0x7B,0x14,0xFF,
+
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+
+        0x07,0xAA,0x81,0x1F
     );
 }
 
@@ -335,16 +366,21 @@ function send_archive_tsrv24(data)
             tmp[i] = tsrv024_archive[i];
         }
 
-        // текущая дата
-        /*{
-            var date = new Date();
-            var second = Date.UTC(date.getFullYear(),date.getMonth(),date.getDate(),date.getHours(), date.getMinutes(),date.getSeconds())/1000;
+        {
+            // избавимся от DLE стаффинга
+            var tmp_buf = new Buffer(20);
 
-            tmp[6] = buf[16] = second&0x000000FF;
-            tmp[5] = buf[15] = (second&0x0000FF00)>>8;
-            tmp[4] = buf[14] = (second&0x00FF0000)>>16;
-            tmp[3] = buf[13] = (second&0xFF000000)>>24;
-        }*/
+            for(var i = 0,j = 0; j < 4;i++,j++)
+            {
+                if(data[9+i] == DLE) {i++;}
+                tmp_buf[j] = data[9+i];
+            }
+
+            var second = Date.UTC(tmp_buf[5]+2000,tmp_buf[4]-1,tmp_buf[3],tmp_buf[2],59,59)/1000;
+
+            buf.writeInt32BE(second,13);
+            tmp.writeInt32BE(second,3);
+        }
 
         var crc = crcModbusHex(tmp,tsrv024_archive.length-2);
 
@@ -399,6 +435,44 @@ function send_OK()
     buf[12] = ETX;
 
     crcfunc(buf,13);
+
+    return buf;
+}
+
+function send_Fail()
+{
+    var buf = new Buffer(21);
+
+    // заголовок СПД
+    {
+        buf[0] = DLE;
+        buf[1] = SOH;
+        buf[2] = 0x00;
+        buf[3] = 0x00;
+        buf[4] = DLE;
+        buf[5] = IS1;
+        buf[6] = 0x7f;
+        buf[7] = DLE;
+        buf[8] = STX;
+    }
+
+    {
+        buf[9]  = HT;
+
+        buf[10]  = 'О';
+        buf[11]  = 'ш';
+        buf[12]  = 'и';
+        buf[13]  = 'б';
+        buf[14]  = 'к';
+        buf[15]  = 'а';
+
+        buf[16] = FF;
+    }
+
+    buf[17] = DLE;
+    buf[18] = ETX;
+
+    crcfunc(buf,19);
 
     return buf;
 }
@@ -479,7 +553,7 @@ function assv_info()
         buf[18] = date.getMinutes();
         buf[19] = date.getHours();
         buf[20] = date.getDate();
-        buf[21] = date.getMonth();
+        buf[21] = date.getMonth()+1;
         buf[22] = date.getFullYear() - 2000;
 
         buf[23] = info.kernel_version;
@@ -495,6 +569,212 @@ function assv_info()
     buf[30] = ETX;
 
     crcfunc(buf,31);
+
+    return buf;
+}
+
+// запись данных ассв
+function assv_eeprom_write(data)
+{
+    var buf = new Buffer(1024);
+    var len = 0;
+    var i = 0;
+    var start_eeprom = data.readUInt16LE(9);
+
+    buf.fill(0);
+
+    while(1)
+    {
+
+        if(data[i] == DLE) {i++;}
+
+        buf[i] = data[11+i];
+
+        i++;
+        len++;
+
+        if((data[i] == DLE) && (data[i+1] == ETX)) break;
+    }
+
+    // прочитаем то что уже есть
+    {
+        var file_data = new Buffer(2048);
+        var file_handle = fs.openSync("assv.txt", "a+", 0644);
+
+        file_data.fill(0);
+
+        var count = fs.readSync(file_handle, file_data, 0, 2048, 0);
+        fs.closeSync(file_handle);
+    }
+
+    // скопируем новые настройки
+    buf.copy(file_data,start_eeprom);
+
+    // запишем в файл нужные данные
+    fs.open("assv.txt", "w+", 0644, function(err, file_handle) {
+        if (!err) {
+
+            fs.write(file_handle, file_data, 0,2048, 0, function(err, written) {
+                if (!err) {
+                    // Всё прошло хорошо
+                } else {
+                    // Произошла ошибка при записи
+                }
+
+                fs.close(file_handle);
+            });
+        } else {
+            // Обработка ошибок при открытии
+        }
+    });
+
+    return send_OK();
+}
+
+function assv_eeprom_read(data)
+{
+    var start_eeprom = data.readUInt16LE(9);
+    var len = data.readUInt8(11);
+    var file = new Buffer(len);
+
+    var file_handle = fs.openSync("assv.txt", "r", 0644);
+    var count = fs.readSync(file_handle, file, 0, len, start_eeprom);
+
+    var buf = new Buffer(len + 13);
+    buf.fill(0);
+
+    // заголовок СПД
+    {
+        buf[0] = DLE;
+        buf[1] = SOH;
+        buf[2] = 0x00;
+        buf[3] = 0x00;
+        buf[4] = DLE;
+        buf[5] = IS1;
+        buf[6] = 0x33;
+        buf[7] = DLE;
+        buf[8] = STX;
+    }
+
+    file.copy(buf,9);
+
+    if(data[10] == 0x03)
+    {   // пока затычка - не понятно не совпадение с асев с асдв
+        buf[9] = 0;
+        buf[10] = 0;
+        buf[11] = 0;
+        buf[12] = 0;
+    }
+
+    buf[len + 13 - 4] = DLE;
+    buf[len + 13 - 3] = ETX;
+
+    crcfunc(buf,len + 13 - 2);
+
+    fs.closeSync(file_handle);
+
+    buf = DLE_staff(buf,9,len + 9);
+
+    console.log(buf);
+
+    return buf;
+
+    // прочитаем данные из файла
+    /*fs.open("assv.txt", "r", 0644, function(err, file_handle) {
+        if (!err) {
+            var file = new Buffer(len);
+
+            fs.read(file_handle, file, 0, len, start_eeprom, function(err) {
+                if (!err) {
+                    // Всё прошло хорошо, отправим в ответ
+                    var buf = new Buffer(len + 13);
+
+                    // заголовок СПД
+                    {
+                        buf[0] = DLE;
+                        buf[1] = SOH;
+                        buf[2] = 0x00;
+                        buf[3] = 0x00;
+                        buf[4] = DLE;
+                        buf[5] = IS1;
+                        buf[6] = 0x33;
+                        buf[7] = DLE;
+                        buf[8] = STX;
+                    }
+
+                    buf.copy(file,9);
+
+                    buf[len + 13 - 4] = DLE;
+                    buf[len + 13 - 3] = ETX;
+
+                    crcfunc(buf,len + 13 - 2);
+
+                    fs.close(file_handle);
+
+                    buf = DLE_staff(buf,9,len + 9);
+
+                    console.log(buf);
+
+                    return buf;
+
+                } else {
+                    // Произошла ошибка при чтении
+                    fs.close(file_handle);
+                }
+            });
+        } else {
+            // Обработка ошибок при открытии файла
+        }
+    });*/
+}
+
+function assv_flash_read(data)
+{
+    var start_eeprom = data.readUInt16LE(9);
+    var len = data.readUInt8(11);
+    var file = new Buffer(len);
+
+    var file_handle = fs.openSync("asev.bin", "r", 0644);
+    var count = fs.readSync(file_handle, file, 0, len, start_eeprom);
+
+    var buf = new Buffer(len + 13);
+    buf.fill(0);
+
+    // заголовок СПД
+    {
+        buf[0] = DLE;
+        buf[1] = SOH;
+        buf[2] = 0x00;
+        buf[3] = 0x00;
+        buf[4] = DLE;
+        buf[5] = IS1;
+        buf[6] = 0x39;
+        buf[7] = DLE;
+        buf[8] = STX;
+    }
+
+    file.copy(buf,9);
+
+    /*if(data[10] == 0xef)
+    {   // пока затычка - не понятно не совпадение с асев с асдв
+        buf[9] = 49;
+        buf[10] = 1;
+        buf[11] = 0x0C;
+        buf[12] = 0x94;
+        buf[13] = 0x2a;
+        buf[14] = 0x73;
+    }*/
+
+    buf[len + 13 - 4] = DLE;
+    buf[len + 13 - 3] = ETX;
+
+    crcfunc(buf,len + 13 - 2);
+
+    fs.closeSync(file_handle);
+
+    buf = DLE_staff(buf,9,len + 9);
+
+    console.log(buf);
 
     return buf;
 }
@@ -586,9 +866,99 @@ function send_modbus_register(data)
     return buf;
 }
 
-function send_modbus_archive(data)
+function send_modbus_archive_tsrv24(data)
 {
-    var buf = new Buffer(14 + tsrv024_archive.length);
+  if(data[13] < 9)     // по номеру архива
+  {   // обычные архивы
+      return tsrv024_archive;
+  }
+  else if(data[13] < 12)
+  {   // суммарные архивы
+      return tsrv024_summ_archive;
+  }
+  else if((data[13] > 17) && (data[13] < 21))
+  {
+      return tsrv24_itog_archive;
+  }
+}
+
+// заполнение архива данными
+function fill_modbus_archive_tsrv24(data,buf,tmp)
+{
+    if(data[13] < 9)     // по номеру архива - обычные архивы
+    {
+        // заполнение полей для 24го
+        buf.writeFloatBE(222.222,13+84);
+        tmp.writeFloatBE(222.222,3+84);
+        buf.writeFloatBE(333.333,13+88);
+        tmp.writeFloatBE(333.333,3+88);
+        buf.writeFloatBE(100.222,13+92);
+        tmp.writeFloatBE(100.222,3+92);
+
+        {   // данные в ТР
+            var W = 111.111;
+
+            for(var i = 0; i < 4;i++)
+            {
+                buf.writeFloatBE(W,13+96+i*4);
+                tmp.writeFloatBE(W,3+96+i*4);
+                W+=W;
+            }
+
+            W=55.55;
+            for(var i = 0; i < 4;i++)
+            {
+                buf.writeFloatBE(W,13+112+i*4);
+                tmp.writeFloatBE(W,3+112+i*4);
+                W+=W;
+            }
+            W=50.22;
+            for(var i = 0; i < 4;i++)
+            {
+                buf.writeFloatBE(W,13+128+i*4);
+                tmp.writeFloatBE(W,3+128+i*4);
+                W+=W;
+            }
+            var t=5022;
+            for(var i = 0; i < 4;i++)
+            {
+                buf.writeInt16BE(t,13+144+i*2);
+                tmp.writeInt16BE(t,3+144+i*2);
+            }
+            for(var i = 0; i < 4;i++)
+            {
+                buf.writeInt16BE(t,13+152+i*2);
+                tmp.writeInt16BE(t,3+152+i*2);
+            }
+            var t=1111;
+            for(var i = 0; i < 4;i++)
+            {
+                buf.writeInt16BE(t,13+160+i*2);
+                tmp.writeInt16BE(t,3+160+i*2);
+            }
+        }
+    }
+    else if(data[13] < 12) // итоговые
+    {
+        buf.writeFloatBE(222.222,13+4);
+        tmp.writeFloatBE(222.222,3+4);
+        buf.writeFloatBE(333.333,13+8);
+        tmp.writeFloatBE(333.333,3+8);
+
+        buf.writeInt16BE(2020,13+14);
+        tmp.writeInt16BE(2020,3+14);
+    }
+    else if((data[13] > 17) && (data[13] < 21)) // нарастающий итог
+    {
+
+    }
+}
+
+function send_modbus_archive(data,type)
+{
+    var arch = (modbus_archive[type])(data);
+
+    var buf = new Buffer(14 + arch.length);
 
     // заголовок СПД
     {
@@ -605,26 +975,92 @@ function send_modbus_archive(data)
     }
 
     {
-        var tmp = new Buffer(tsrv024_archive.length);
+        var tmp = new Buffer(arch.length);
 
-        for(var i = 0; i < tsrv024_archive.length;i++)
+        for(var i = 0; i < arch.length-2;i++)
         {
-            buf[10 + i] = tsrv024_archive[i];
-            tmp[i] = tsrv024_archive[i];
+            buf[10 + i] = arch[i];
+            tmp[i] = arch[i];
         }
 
-        var crc = crcModbusHex(tmp,tsrv024_archive.length-2);
+        // текущая дата из запроса
+        {
+            var date = new Date();
 
-        buf[i + 11] = crc&0xFF;
-        buf[i + 12] = (crc&0xFF00)>>8;
+            // избавимся от DLE стаффинга
+            var tmp_buf = new Buffer(10);
+
+            for(var i = 0,j = 0; j < 4;i++,j++)
+            {
+                if(data[19+i] == DLE) {i++;}
+                tmp_buf[j] = data[19+i];
+            }
+
+            var second = Date.UTC(tmp_buf[3]+2000,tmp_buf[2]-1,tmp_buf[1],tmp_buf[0],59,59)/1000;
+
+            buf.writeInt32BE(second,13);
+            tmp.writeInt32BE(second,3);
+
+            (fill_modbus_archive[type])(data,buf,tmp);
+        }
+
+        var crc = crcModbusHex(tmp,arch.length-2);
+
+        buf[(arch.length-2) + 10] = crc&0xFF;
+        buf[(arch.length-2) + 11] = (crc&0xFF00)>>8;
     }
 
-    buf[tsrv024_archive.length + 11] = DLE;
-    buf[tsrv024_archive.length + 12] = ETX;
+    buf[arch.length + 10] = DLE;
+    buf[arch.length + 11] = ETX;
 
-    crcfunc(buf,tsrv024_archive.length + 13);
+    crcfunc(buf,arch.length + 12);
+
+    buf = DLE_staff(buf,10,arch.length + 10);
 
     console.log('ответ',buf);
+
+    return buf;
+}
+
+// функция производит dle стаффинг
+function DLE_staff(buf,start,end)
+{
+    var tmp_buf = new Buffer(1024);
+    var len = 0;
+    var j = 0;
+
+    tmp_buf.fill(0);
+
+    for(var i = 0,j = 0; i < start;i++,j++)
+    {
+        tmp_buf[j] = buf[i];
+        len++;
+    }
+
+    for(var i = start,j = start; i < end;i++,j++)
+    {
+       tmp_buf[j] = buf[i];
+
+       if(buf[i] == DLE)
+       {
+           j++;
+           tmp_buf[j] = DLE;
+           len++;
+       }
+
+       len++;
+    }
+
+    for(var i = end; i < buf.length;i++,j++)
+    {
+        tmp_buf[j] = buf[i];
+        len++;
+    }
+
+    buf = new Buffer(len);
+    buf.fill(0);
+
+    tmp_buf.copy(buf,0,0,len);
 
     return buf;
 }
@@ -644,7 +1080,7 @@ function send_answer_modbus(data,type)
     }
     else if(modbus_func == 0x41)
     {   // запрос архивов
-        return send_modbus_archive(data);
+        return send_modbus_archive(data,type);
     }
 }
 
@@ -656,6 +1092,24 @@ function prepare_response(stream,data,type)
         {   // запрос архива
             send_response_archive(stream,data,type);
         }
+        else if(data[6] == 0x31)
+        {   // запись настроек в АСЕВ
+            setTimeout(function(){
+                stream.write(assv_eeprom_write(data));
+            },500);
+        }
+        else if(data[6] == 0x32)
+        {   // чтение настроек в АСЕВ
+            setTimeout(function(){
+                stream.write(assv_eeprom_read(data));
+            },500);
+        }
+        else if(data[6] == 0x38)
+        {   // чтение flash в АСЕВ
+            setTimeout(function(){
+                stream.write(assv_flash_read(data));
+            },500);
+        }
         else if(data[6] == 0x3e)
         {   // запрос информации об адаптере
             setTimeout(function(){
@@ -666,6 +1120,12 @@ function prepare_response(stream,data,type)
         {   // модбас запрос к прибору
             setTimeout(function(){
                 stream.write(send_answer_modbus(data,type));
+            },500);
+        }
+        else if(data[6] == 0x88)
+        {   // запрос пароля - всегда ОК
+            setTimeout(function(){
+                stream.write(send_OK());
             },500);
         }
     }

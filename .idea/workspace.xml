@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dbd43d67-c250-4c45-b94d-6a97c6f45a7b" name="Default" comment="" />
+    <list default="true" id="dbd43d67-c250-4c45-b94d-6a97c6f45a7b" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/dimoniche.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/dimoniche.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+    </list>
     <ignored path="assv_emu.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,17 +28,25 @@
       <file leaf-file-name="app.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="606" column="5" selection-start="14046" selection-end="14046" vertical-scroll-proportion="0.26619965">
+            <state line="755" column="21" selection-start="17465" selection-end="17465" vertical-scroll-proportion="0.5023112">
               <folding>
-                <element signature="e#2289#4153#0" expanded="false" />
-                <element signature="e#6149#6372#0" expanded="false" />
+                <element signature="e#539#2466#0" expanded="false" />
+                <element signature="e#2505#5018#0" expanded="false" />
+                <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
+                <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
+                <element signature="n#!!block;n#crcfunc#0" expanded="false" />
+                <element signature="n#!!block;n#send_name#0" expanded="false" />
+                <element signature="n#!!block;n#send_number#0" expanded="false" />
+                <element signature="e#7014#7237#0" expanded="false" />
+                <element signature="n#!!block;n#send_US#0" expanded="false" />
                 <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
                 <element signature="n#!!block;n#send_OK#0" expanded="false" />
+                <element signature="n#!!block;n#send_Fail#0" expanded="false" />
                 <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-                <element signature="e#10610#10962#0" expanded="false" />
+                <element signature="e#12048#12400#0" expanded="false" />
                 <element signature="n#!!block;n#assv_info#0" expanded="false" />
-                <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
-                <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+                <element signature="e#12712#13189#0" expanded="false" />
+                <element signature="e#15523#16877#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -45,6 +58,9 @@
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
@@ -59,7 +75,7 @@
     <option name="width" value="1288" />
     <option name="height" value="1032" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -109,10 +125,14 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="restartRequiresConfirmation" value="true" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../server" />
+    <property name="restartRequiresConfirmation" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RunManager" selected="Node.js.app.js">
     <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" working-dir="$PROJECT_DIR$" coffeescript-run="false">
@@ -130,6 +150,24 @@
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="DETECT_NESTED_COPIES" value="true" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="dbd43d67-c250-4c45-b94d-6a97c6f45a7b" name="Default" comment="" />
@@ -144,12 +182,12 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19570406" sideWeight="0.67344636" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.19570406" sideWeight="0.42485875" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19570406" sideWeight="0.7615819" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3581921" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32655367" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32316384" sideWeight="0.08512331" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23841807" sideWeight="0.9093079" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -211,23 +249,63 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="20" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app.js</url>
+          <line>305</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="76" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="599" column="0" selection-start="13763" selection-end="13763" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#2289#4153#0" expanded="false" />
-            <element signature="e#6149#6372#0" expanded="false" />
+            <element signature="e#539#2466#0" expanded="false" />
+            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
+            <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
+            <element signature="n#!!block;n#crcfunc#0" expanded="false" />
+            <element signature="n#!!block;n#send_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_number#0" expanded="false" />
+            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="n#!!block;n#send_US#0" expanded="false" />
             <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
             <element signature="n#!!block;n#send_OK#0" expanded="false" />
+            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
             <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#10610#10962#0" expanded="false" />
+            <element signature="e#12048#12400#0" expanded="false" />
             <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="e#12712#13189#0" expanded="false" />
+            <element signature="e#15523#16877#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#539#2466#0" expanded="false" />
+            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
+            <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
+            <element signature="n#!!block;n#crcfunc#0" expanded="false" />
+            <element signature="n#!!block;n#send_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_number#0" expanded="false" />
+            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="n#!!block;n#send_US#0" expanded="false" />
+            <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_OK#0" expanded="false" />
+            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
+            <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
+            <element signature="e#12048#12400#0" expanded="false" />
+            <element signature="n#!!block;n#assv_info#0" expanded="false" />
+            <element signature="e#12712#13189#0" expanded="false" />
+            <element signature="e#15523#16877#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -236,15 +314,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="345" column="0" selection-start="8022" selection-end="8022" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#2289#4153#0" expanded="false" />
-            <element signature="e#6149#6372#0" expanded="false" />
+            <element signature="e#539#2466#0" expanded="false" />
+            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
+            <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
+            <element signature="n#!!block;n#crcfunc#0" expanded="false" />
+            <element signature="n#!!block;n#send_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_number#0" expanded="false" />
+            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="n#!!block;n#send_US#0" expanded="false" />
             <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
             <element signature="n#!!block;n#send_OK#0" expanded="false" />
+            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
             <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#10610#10962#0" expanded="false" />
+            <element signature="e#12048#12400#0" expanded="false" />
             <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="e#12712#13189#0" expanded="false" />
+            <element signature="e#15523#16877#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -253,15 +339,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="323" column="5" selection-start="7600" selection-end="7600" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#2289#4153#0" expanded="false" />
-            <element signature="e#6149#6372#0" expanded="false" />
+            <element signature="e#539#2466#0" expanded="false" />
+            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
+            <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
+            <element signature="n#!!block;n#crcfunc#0" expanded="false" />
+            <element signature="n#!!block;n#send_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_number#0" expanded="false" />
+            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="n#!!block;n#send_US#0" expanded="false" />
             <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
             <element signature="n#!!block;n#send_OK#0" expanded="false" />
+            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
             <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#10610#10962#0" expanded="false" />
+            <element signature="e#12048#12400#0" expanded="false" />
             <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="e#12712#13189#0" expanded="false" />
+            <element signature="e#15523#16877#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -270,15 +364,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="296" column="5" selection-start="6676" selection-end="6676" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#2289#4153#0" expanded="false" />
-            <element signature="e#6149#6372#0" expanded="false" />
+            <element signature="e#539#2466#0" expanded="false" />
+            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
+            <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
+            <element signature="n#!!block;n#crcfunc#0" expanded="false" />
+            <element signature="n#!!block;n#send_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_number#0" expanded="false" />
+            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="n#!!block;n#send_US#0" expanded="false" />
             <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
             <element signature="n#!!block;n#send_OK#0" expanded="false" />
+            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
             <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#10610#10962#0" expanded="false" />
+            <element signature="e#12048#12400#0" expanded="false" />
             <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="e#12712#13189#0" expanded="false" />
+            <element signature="e#15523#16877#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -292,17 +394,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="606" column="5" selection-start="14046" selection-end="14046" vertical-scroll-proportion="0.26619965">
+        <state line="755" column="21" selection-start="17465" selection-end="17465" vertical-scroll-proportion="0.5023112">
           <folding>
-            <element signature="e#2289#4153#0" expanded="false" />
-            <element signature="e#6149#6372#0" expanded="false" />
+            <element signature="e#539#2466#0" expanded="false" />
+            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
+            <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
+            <element signature="n#!!block;n#crcfunc#0" expanded="false" />
+            <element signature="n#!!block;n#send_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_number#0" expanded="false" />
+            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="n#!!block;n#send_US#0" expanded="false" />
             <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
             <element signature="n#!!block;n#send_OK#0" expanded="false" />
+            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
             <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#10610#10962#0" expanded="false" />
+            <element signature="e#12048#12400#0" expanded="false" />
             <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
-            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="e#12712#13189#0" expanded="false" />
+            <element signature="e#15523#16877#0" expanded="false" />
           </folding>
         </state>
       </provider>
