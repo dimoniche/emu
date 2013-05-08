@@ -15,6 +15,11 @@ var type_device = new Array(
     send_archive_tsrv24
 );
 
+// обработчики архивов ассв по расписанию
+var type_device_schedule = new Array(
+    send_archive_schedule_tsrv24
+);
+
 // обработчики архивов по модбасу
 var modbus_archive = new Array(
     send_modbus_archive_tsrv24
@@ -338,7 +343,7 @@ function send_US(number)
     return buf;
 }
 
-function send_archive_tsrv24(data)
+function send_archive_tsrv24(data,second_now)
 {
     var buf = new Buffer(15 + 3*(tsrv024_archive.length));
 
@@ -367,7 +372,7 @@ function send_archive_tsrv24(data)
         }
 
         {
-            // избавимся от DLE стаффинга
+            /*// избавимся от DLE стаффинга
             var tmp_buf = new Buffer(20);
 
             for(var i = 0,j = 0; j < 4;i++,j++)
@@ -377,9 +382,10 @@ function send_archive_tsrv24(data)
             }
 
             var second = Date.UTC(tmp_buf[5]+2000,tmp_buf[4]-1,tmp_buf[3],tmp_buf[2],59,59)/1000;
+            */
 
-            buf.writeInt32BE(second,13);
-            tmp.writeInt32BE(second,3);
+            buf.writeInt32BE(second_now,13);
+            tmp.writeInt32BE(second_now,3);
         }
 
         var crc = crcModbusHex(tmp,tsrv024_archive.length-2);
@@ -481,24 +487,62 @@ function send_Fail()
 function send_response_archive(stream,data,type)
 {
     setTimeout(function(){
+        console.log('1');
         stream.write(send_name(name_device[type]));
         setTimeout(function(){
+            console.log('1');
             stream.write(send_number());
             setTimeout(function(){
+                console.log('1');
                 stream.write(send_US(1));
                 setTimeout(function(){
+                    console.log('1');
                     stream.write(send_US(2));
                     setTimeout(function(){
+                        console.log('1');
                         stream.write(send_US(3));
                         setTimeout(function(){
+                            console.log('1');
                             stream.write(send_US(4));
                             setTimeout(function(){
+                                console.log('1');
                                 stream.write(send_US(5));
                                 setTimeout(function(){
-                                    stream.write((type_device[type])(data));
-                                    setTimeout(function(){
-                                        stream.write(send_OK());
-                                    },500);
+                                    console.log('1');
+
+                                    // узнаем сколько спросили архивов - столько и выдадим
+                                    {
+                                        var type_archive = data[10];
+                                        var count_record = 0;
+
+                                        // избавимся от DLE стаффинга
+                                        var tmp_buf = new Buffer(16);
+
+                                        for(var i = 0,j = 0; j < 8;i++,j++)
+                                        {
+                                            if(data[11+i] == DLE) {i++;}
+                                            tmp_buf[j] = data[11+i];
+                                        }
+
+                                        var second_last = Date.UTC(tmp_buf[3]+2000,tmp_buf[2]-1,tmp_buf[1],tmp_buf[0],59,59)/1000;
+                                        var second_now  = Date.UTC(tmp_buf[7]+2000,tmp_buf[6]-1,tmp_buf[5],tmp_buf[4],59,59)/1000;
+
+                                        if(type_archive == 1)
+                                        {   // сутки
+                                            count_record = (second_now - second_last)/86400;
+                                        }
+
+                                        for(var i = 0; i < count_record; i++)
+                                        {
+                                            if(type_archive == 1) {second_last += 86400;}
+
+                                            stream.write((type_device[type])(data,second_last));
+                                            setTimeout(function(){
+                                                console.log('a');
+                                                stream.write(send_OK());
+                                            },500);
+                                        }
+                                    }
                                 },500);
                             },500);
                         },500);
@@ -511,7 +555,7 @@ function send_response_archive(stream,data,type)
 
 var info =
 {
-    ident_string: '1000\0\0\0\0\0',
+    ident_string: '3000\0\0\0\0\0',
 
     current_min:        0,
     current_hour:       0,
@@ -530,7 +574,7 @@ var info =
 };
 
 // инфо об ассв
-function assv_info()
+function assv_info(port)
 {
     var buf = new Buffer(33);
 
@@ -549,7 +593,8 @@ function assv_info()
 
     {
         var date = new Date();
-        buf.write(info.ident_string,9,9);
+
+        buf.write(port.toString() + '\0\0\0\0\0\0\0\0\0',9,9);
         buf[18] = date.getMinutes();
         buf[19] = date.getHours();
         buf[20] = date.getDate();
@@ -570,11 +615,13 @@ function assv_info()
 
     crcfunc(buf,31);
 
+    console.log(buf);
+
     return buf;
 }
 
 // запись данных ассв
-function assv_eeprom_write(data)
+function assv_eeprom_write(data,port)
 {
     var buf = new Buffer(1024);
     var len = 0;
@@ -586,20 +633,21 @@ function assv_eeprom_write(data)
     while(1)
     {
 
-        if(data[i] == DLE) {i++;}
+        if(data[11+i] == DLE) {i++;}
 
         buf[i] = data[11+i];
 
         i++;
         len++;
 
-        if((data[i] == DLE) && (data[i+1] == ETX)) break;
+        if((data[11+i] == DLE) && (data[11+i+1] == ETX)) break;
     }
 
     // прочитаем то что уже есть
     {
         var file_data = new Buffer(2048);
-        var file_handle = fs.openSync("assv.txt", "a+", 0644);
+        var namefile = "asev_" + port.toString() + ".txt";
+        var file_handle = fs.openSync(namefile, "a+", 0644);
 
         file_data.fill(0);
 
@@ -611,7 +659,7 @@ function assv_eeprom_write(data)
     buf.copy(file_data,start_eeprom);
 
     // запишем в файл нужные данные
-    fs.open("assv.txt", "w+", 0644, function(err, file_handle) {
+    fs.open(namefile, "w+", 0644, function(err, file_handle) {
         if (!err) {
 
             fs.write(file_handle, file_data, 0,2048, 0, function(err, written) {
@@ -631,13 +679,16 @@ function assv_eeprom_write(data)
     return send_OK();
 }
 
-function assv_eeprom_read(data)
+function assv_eeprom_read(data,port)
 {
     var start_eeprom = data.readUInt16LE(9);
     var len = data.readUInt8(11);
     var file = new Buffer(len);
 
-    var file_handle = fs.openSync("assv.txt", "r", 0644);
+    var namefile = "asev_" + port.toString() + ".txt";
+
+    // прочитаем данные из файла
+    var file_handle = fs.openSync(namefile, "r", 0644);
     var count = fs.readSync(file_handle, file, 0, len, start_eeprom);
 
     var buf = new Buffer(len + 13);
@@ -678,54 +729,6 @@ function assv_eeprom_read(data)
     console.log(buf);
 
     return buf;
-
-    // прочитаем данные из файла
-    /*fs.open("assv.txt", "r", 0644, function(err, file_handle) {
-        if (!err) {
-            var file = new Buffer(len);
-
-            fs.read(file_handle, file, 0, len, start_eeprom, function(err) {
-                if (!err) {
-                    // Всё прошло хорошо, отправим в ответ
-                    var buf = new Buffer(len + 13);
-
-                    // заголовок СПД
-                    {
-                        buf[0] = DLE;
-                        buf[1] = SOH;
-                        buf[2] = 0x00;
-                        buf[3] = 0x00;
-                        buf[4] = DLE;
-                        buf[5] = IS1;
-                        buf[6] = 0x33;
-                        buf[7] = DLE;
-                        buf[8] = STX;
-                    }
-
-                    buf.copy(file,9);
-
-                    buf[len + 13 - 4] = DLE;
-                    buf[len + 13 - 3] = ETX;
-
-                    crcfunc(buf,len + 13 - 2);
-
-                    fs.close(file_handle);
-
-                    buf = DLE_staff(buf,9,len + 9);
-
-                    console.log(buf);
-
-                    return buf;
-
-                } else {
-                    // Произошла ошибка при чтении
-                    fs.close(file_handle);
-                }
-            });
-        } else {
-            // Обработка ошибок при открытии файла
-        }
-    });*/
 }
 
 function assv_flash_read(data)
@@ -1084,8 +1087,154 @@ function send_answer_modbus(data,type)
     }
 }
 
-function prepare_response(stream,data,type)
+function send_archive_schedule_tsrv24()
 {
+    var buf = new Buffer(15 + 3*(tsrv024_archive.length));
+
+    // заголовок СПД
+    {
+        buf[0] = DLE;
+        buf[1] = SOH;
+        buf[2] = 0x00;
+        buf[3] = 0x00;
+        buf[4] = DLE;
+        buf[5] = IS1;
+        buf[6] = 0x3b;
+        buf[7] = 0x8a;  ///?????
+        buf[8] = DLE;
+        buf[9] = STX;
+    }
+
+    for(var j = 0; j < 3;j++)
+    {
+        var tmp = new Buffer(tsrv024_archive.length);
+
+        for(var i = 0; i < tsrv024_archive.length;i++)
+        {
+            buf[10 + i + j*tsrv024_archive.length] = tsrv024_archive[i];
+            tmp[i] = tsrv024_archive[i];
+        }
+
+        {
+            var date = new Date();
+
+            var second = Date.UTC(date.getFullYear(),date.getMonth(),date.getDate(),date.getHours(),59,59)/1000;
+
+            buf.writeInt32BE(second,13);
+            tmp.writeInt32BE(second,3);
+        }
+
+        var crc = crcModbusHex(tmp,tsrv024_archive.length-2);
+
+        buf[i + j*tsrv024_archive.length-2 + 11] = crc&0xFF;
+        buf[i + j*tsrv024_archive.length + 12] = (crc&0xFF00)>>8;
+    }
+
+    {   // суммарный архив
+        for(var i = 0; i < tsrv024_summ_archive.length;i++)
+        {
+            buf[10 + 3*tsrv024_archive.length + i] = tsrv024_summ_archive[i];
+            tmp[i] = tsrv024_summ_archive[i];
+        }
+
+        var crc = crcModbusHex(tmp,tsrv024_summ_archive.length-2);
+
+        buf[i + 11] = crc&0xFF;
+        buf[i + 12] = (crc&0xFF00)>>8;
+    }
+
+    buf[3*tsrv024_archive.length + tsrv024_summ_archive.length + 11] = DLE;
+    buf[3*tsrv024_archive.length + tsrv024_summ_archive.length + 12] = ETX;
+
+    crcfunc(buf,3*tsrv024_archive.length + tsrv024_summ_archive.length + 13);
+
+    return buf;
+}
+
+function send_response_archive_schedule(socket,type)
+{
+    setTimeout(function(){
+        socket.write(send_name(name_device[type]));
+        console.log('name');
+        setTimeout(function(){
+            socket.write(send_number());
+            console.log('number');
+            setTimeout(function(){
+                socket.write(send_US(1));
+                console.log('us1');
+                setTimeout(function(){
+                    socket.write(send_US(2));
+                    console.log('us2');
+                    setTimeout(function(){
+                        socket.write(send_US(3));
+                        console.log('us3');
+                        setTimeout(function(){
+                            socket.write(send_US(4));
+                            console.log('us4');
+                            setTimeout(function(){
+                                socket.write(send_US(5));
+                                console.log('us5');
+                                setTimeout(function(){
+                                    socket.write((type_device_schedule[type])());
+                                    console.log('archive');
+                                    setTimeout(function(){
+                                        socket.write(send_OK());
+                                    },500);
+                                },500);
+                            },500);
+                        },500);
+                    },500);
+                },500);
+            },500);
+        },500);
+    },500);
+}
+
+// обработчик работы по расписанию
+function interval_connection()
+{
+    var socket = new net.Socket();
+    var IP_adress = "10.1.50.211";
+
+    var port = 3000;
+
+    /*{   // прочтем из настроек адрес сервера диспетчера
+        var namefile = "asev_" + port.toString() + ".txt";
+
+        // прочитаем данные из файла
+        var file_handle = fs.openSync(namefile, "r", 0644);
+        var count = fs.readSync(file_handle, file, 0, len, start_eeprom);
+
+    }*/
+
+    socket.connect(2060,IP_adress,function (connection) {
+        console.log('Socket connected to port %s', 2060);
+
+        send_response_archive_schedule(socket,TSRV_24);
+
+        socket.on('data',function(data){
+            socket.end();
+        });
+
+        socket.on('end',function(){
+            console.log('socket end');
+        });
+        socket.on('close',function(){
+            console.log('socket close');
+        });
+        socket.on('timeout',function(){
+            console.log('socket timeout');
+        });
+        socket.on('error',function(){
+            console.log('socket error');
+        });
+    });
+}
+
+function prepare_response(stream,data,type,port)
+{
+    var intervalID;
+
     if(data[0] == DLE && data[1] == SOH)
     {   // если это запрос СПДанные
         if(data[6] == 0x3a)
@@ -1095,13 +1244,13 @@ function prepare_response(stream,data,type)
         else if(data[6] == 0x31)
         {   // запись настроек в АСЕВ
             setTimeout(function(){
-                stream.write(assv_eeprom_write(data));
+                stream.write(assv_eeprom_write(data,port));
             },500);
         }
         else if(data[6] == 0x32)
         {   // чтение настроек в АСЕВ
             setTimeout(function(){
-                stream.write(assv_eeprom_read(data));
+                stream.write(assv_eeprom_read(data,port));
             },500);
         }
         else if(data[6] == 0x38)
@@ -1113,7 +1262,13 @@ function prepare_response(stream,data,type)
         else if(data[6] == 0x3e)
         {   // запрос информации об адаптере
             setTimeout(function(){
-                stream.write(assv_info());
+                stream.write(assv_info(port));
+            },500);
+        }
+        else if(data[6] == 0x3f)
+        {   // запрос информации об адаптере
+            setTimeout(function(){
+                stream.write(assv_info(port));
             },500);
         }
         else if(data[6] == 0x28)
@@ -1128,11 +1283,53 @@ function prepare_response(stream,data,type)
                 stream.write(send_OK());
             },500);
         }
+        else if(data[6] == 0x89)
+        {   // включение расписания
+            var namefile = "asev_shed_" + port.toString() + ".txt";
+            var buf = new Buffer(6);
+            data.copy(buf,0,9,15);
+
+            // запишем расписание
+            var file_handle = fs.openSync(namefile, "w+", 0644);
+            var count = fs.writeSync(file_handle, buf, 0, 6, 0);
+            fs.closeSync(file_handle);
+
+            // запишем настройки для вызова расписания
+            /*namefile = "asev_setting_" + port.toString() + ".txt";
+            var file_handle = fs.openSync(namefile, "w+", 0644);
+            var count = fs.writeSync(file_handle, buf, 0, 6, 0);
+            fs.closeSync(file_handle);*/
+
+            if(data[9] > 0)
+            {   // включим расписание
+                clearInterval(intervalID);
+
+                intervalID = setInterval(function()
+                    {   // это вызывается переодически
+                        interval_connection();
+                    }
+                    ,3600000);
+            }
+            else
+            {
+                clearInterval(intervalID);
+            }
+
+            setTimeout(function(){
+                stream.write(send_OK());
+            },500);
+        }
     }
 }
 
 function assv_emulator(port,type)
 {
+    /*intervalID = setInterval(function()
+        {   // это вызывается переодически
+            interval_connection();
+        }
+        ,30000);*/
+
     var server;
     server = net.createServer(function (stream) {
         console.log('server connected');
@@ -1142,7 +1339,7 @@ function assv_emulator(port,type)
             console.log(data);
 
             // разберем ответ
-            prepare_response(stream, data, type);
+            prepare_response(stream, data, type, port);
 
         });
 

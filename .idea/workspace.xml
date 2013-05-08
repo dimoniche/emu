@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dbd43d67-c250-4c45-b94d-6a97c6f45a7b" name="Default" comment="">
+      <change type="DELETED" beforePath="D:\NodeJS\assv_emu\assv.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/dimoniche.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/dimoniche.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
     </list>
     <ignored path="assv_emu.iws" />
@@ -28,25 +27,31 @@
       <file leaf-file-name="app.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="755" column="21" selection-start="17465" selection-end="17465" vertical-scroll-proportion="0.5023112">
+            <state line="605" column="38" selection-start="15209" selection-end="15209" vertical-scroll-proportion="0.4375963">
               <folding>
-                <element signature="e#539#2466#0" expanded="false" />
-                <element signature="e#2505#5018#0" expanded="false" />
+                <element signature="e#656#2583#0" expanded="false" />
+                <element signature="e#2622#5135#0" expanded="false" />
                 <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
                 <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
                 <element signature="n#!!block;n#crcfunc#0" expanded="false" />
                 <element signature="n#!!block;n#send_name#0" expanded="false" />
                 <element signature="n#!!block;n#send_number#0" expanded="false" />
-                <element signature="e#7014#7237#0" expanded="false" />
+                <element signature="e#7131#7354#0" expanded="false" />
                 <element signature="n#!!block;n#send_US#0" expanded="false" />
-                <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
-                <element signature="n#!!block;n#send_OK#0" expanded="false" />
-                <element signature="n#!!block;n#send_Fail#0" expanded="false" />
-                <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-                <element signature="e#12048#12400#0" expanded="false" />
-                <element signature="n#!!block;n#assv_info#0" expanded="false" />
-                <element signature="e#12712#13189#0" expanded="false" />
-                <element signature="e#15523#16877#0" expanded="false" />
+                <element signature="e#8702#9050#0" expanded="false" />
+                <element signature="e#14142#14494#0" expanded="false" />
+                <element signature="n#!!block;n#assv_eeprom_read#0" expanded="false" />
+                <element signature="n#!!block;n#assv_flash_read#0" expanded="false" />
+                <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
+                <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+                <element signature="n#!!block;n#send_modbus_archive_tsrv24#0" expanded="false" />
+                <element signature="n#!!block;n#fill_modbus_archive_tsrv24#0" expanded="false" />
+                <element signature="n#!!block;n#send_modbus_archive#0" expanded="false" />
+                <element signature="n#!!block;n#DLE_staff#0" expanded="false" />
+                <element signature="n#!!block;n#send_answer_modbus#0" expanded="false" />
+                <element signature="n#!!block;n#send_archive_schedule_tsrv24#0" expanded="false" />
+                <element signature="n#!!block;n#send_response_archive_schedule#0" expanded="false" />
+                <element signature="e#29053#29346#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -252,11 +257,11 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>305</line>
-          <option name="timeStamp" value="59" />
+          <line>534</line>
+          <option name="timeStamp" value="94" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="76" />
+      <option name="time" value="95" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -264,23 +269,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="599" column="0" selection-start="13763" selection-end="13763" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#539#2466#0" expanded="false" />
-            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="e#656#2583#0" expanded="false" />
+            <element signature="e#2622#5135#0" expanded="false" />
             <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
             <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
             <element signature="n#!!block;n#crcfunc#0" expanded="false" />
             <element signature="n#!!block;n#send_name#0" expanded="false" />
             <element signature="n#!!block;n#send_number#0" expanded="false" />
-            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="e#7131#7354#0" expanded="false" />
             <element signature="n#!!block;n#send_US#0" expanded="false" />
-            <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
-            <element signature="n#!!block;n#send_OK#0" expanded="false" />
-            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
-            <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#12048#12400#0" expanded="false" />
-            <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="e#12712#13189#0" expanded="false" />
-            <element signature="e#15523#16877#0" expanded="false" />
+            <element signature="e#8702#9050#0" expanded="false" />
+            <element signature="e#14142#14494#0" expanded="false" />
+            <element signature="n#!!block;n#assv_eeprom_read#0" expanded="false" />
+            <element signature="n#!!block;n#assv_flash_read#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#fill_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive#0" expanded="false" />
+            <element signature="n#!!block;n#DLE_staff#0" expanded="false" />
+            <element signature="n#!!block;n#send_answer_modbus#0" expanded="false" />
+            <element signature="n#!!block;n#send_archive_schedule_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_response_archive_schedule#0" expanded="false" />
+            <element signature="e#29053#29346#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -289,23 +300,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#539#2466#0" expanded="false" />
-            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="e#656#2583#0" expanded="false" />
+            <element signature="e#2622#5135#0" expanded="false" />
             <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
             <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
             <element signature="n#!!block;n#crcfunc#0" expanded="false" />
             <element signature="n#!!block;n#send_name#0" expanded="false" />
             <element signature="n#!!block;n#send_number#0" expanded="false" />
-            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="e#7131#7354#0" expanded="false" />
             <element signature="n#!!block;n#send_US#0" expanded="false" />
-            <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
-            <element signature="n#!!block;n#send_OK#0" expanded="false" />
-            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
-            <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#12048#12400#0" expanded="false" />
-            <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="e#12712#13189#0" expanded="false" />
-            <element signature="e#15523#16877#0" expanded="false" />
+            <element signature="e#8702#9050#0" expanded="false" />
+            <element signature="e#14142#14494#0" expanded="false" />
+            <element signature="n#!!block;n#assv_eeprom_read#0" expanded="false" />
+            <element signature="n#!!block;n#assv_flash_read#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#fill_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive#0" expanded="false" />
+            <element signature="n#!!block;n#DLE_staff#0" expanded="false" />
+            <element signature="n#!!block;n#send_answer_modbus#0" expanded="false" />
+            <element signature="n#!!block;n#send_archive_schedule_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_response_archive_schedule#0" expanded="false" />
+            <element signature="e#29053#29346#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -314,23 +331,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="345" column="0" selection-start="8022" selection-end="8022" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#539#2466#0" expanded="false" />
-            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="e#656#2583#0" expanded="false" />
+            <element signature="e#2622#5135#0" expanded="false" />
             <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
             <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
             <element signature="n#!!block;n#crcfunc#0" expanded="false" />
             <element signature="n#!!block;n#send_name#0" expanded="false" />
             <element signature="n#!!block;n#send_number#0" expanded="false" />
-            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="e#7131#7354#0" expanded="false" />
             <element signature="n#!!block;n#send_US#0" expanded="false" />
-            <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
-            <element signature="n#!!block;n#send_OK#0" expanded="false" />
-            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
-            <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#12048#12400#0" expanded="false" />
-            <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="e#12712#13189#0" expanded="false" />
-            <element signature="e#15523#16877#0" expanded="false" />
+            <element signature="e#8702#9050#0" expanded="false" />
+            <element signature="e#14142#14494#0" expanded="false" />
+            <element signature="n#!!block;n#assv_eeprom_read#0" expanded="false" />
+            <element signature="n#!!block;n#assv_flash_read#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#fill_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive#0" expanded="false" />
+            <element signature="n#!!block;n#DLE_staff#0" expanded="false" />
+            <element signature="n#!!block;n#send_answer_modbus#0" expanded="false" />
+            <element signature="n#!!block;n#send_archive_schedule_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_response_archive_schedule#0" expanded="false" />
+            <element signature="e#29053#29346#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -339,23 +362,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="323" column="5" selection-start="7600" selection-end="7600" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#539#2466#0" expanded="false" />
-            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="e#656#2583#0" expanded="false" />
+            <element signature="e#2622#5135#0" expanded="false" />
             <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
             <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
             <element signature="n#!!block;n#crcfunc#0" expanded="false" />
             <element signature="n#!!block;n#send_name#0" expanded="false" />
             <element signature="n#!!block;n#send_number#0" expanded="false" />
-            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="e#7131#7354#0" expanded="false" />
             <element signature="n#!!block;n#send_US#0" expanded="false" />
-            <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
-            <element signature="n#!!block;n#send_OK#0" expanded="false" />
-            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
-            <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#12048#12400#0" expanded="false" />
-            <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="e#12712#13189#0" expanded="false" />
-            <element signature="e#15523#16877#0" expanded="false" />
+            <element signature="e#8702#9050#0" expanded="false" />
+            <element signature="e#14142#14494#0" expanded="false" />
+            <element signature="n#!!block;n#assv_eeprom_read#0" expanded="false" />
+            <element signature="n#!!block;n#assv_flash_read#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#fill_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive#0" expanded="false" />
+            <element signature="n#!!block;n#DLE_staff#0" expanded="false" />
+            <element signature="n#!!block;n#send_answer_modbus#0" expanded="false" />
+            <element signature="n#!!block;n#send_archive_schedule_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_response_archive_schedule#0" expanded="false" />
+            <element signature="e#29053#29346#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -364,23 +393,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="296" column="5" selection-start="6676" selection-end="6676" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#539#2466#0" expanded="false" />
-            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="e#656#2583#0" expanded="false" />
+            <element signature="e#2622#5135#0" expanded="false" />
             <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
             <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
             <element signature="n#!!block;n#crcfunc#0" expanded="false" />
             <element signature="n#!!block;n#send_name#0" expanded="false" />
             <element signature="n#!!block;n#send_number#0" expanded="false" />
-            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="e#7131#7354#0" expanded="false" />
             <element signature="n#!!block;n#send_US#0" expanded="false" />
-            <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
-            <element signature="n#!!block;n#send_OK#0" expanded="false" />
-            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
-            <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#12048#12400#0" expanded="false" />
-            <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="e#12712#13189#0" expanded="false" />
-            <element signature="e#15523#16877#0" expanded="false" />
+            <element signature="e#8702#9050#0" expanded="false" />
+            <element signature="e#14142#14494#0" expanded="false" />
+            <element signature="n#!!block;n#assv_eeprom_read#0" expanded="false" />
+            <element signature="n#!!block;n#assv_flash_read#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#fill_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive#0" expanded="false" />
+            <element signature="n#!!block;n#DLE_staff#0" expanded="false" />
+            <element signature="n#!!block;n#send_answer_modbus#0" expanded="false" />
+            <element signature="n#!!block;n#send_archive_schedule_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_response_archive_schedule#0" expanded="false" />
+            <element signature="e#29053#29346#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -392,27 +427,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.WebIde50/system/extLibs/nodejs-v0.8.20-src/core-modules-sources/lib/module.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="456" column="0" selection-start="12789" selection-end="12789" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="755" column="21" selection-start="17465" selection-end="17465" vertical-scroll-proportion="0.5023112">
+        <state line="605" column="38" selection-start="15209" selection-end="15209" vertical-scroll-proportion="0.4375963">
           <folding>
-            <element signature="e#539#2466#0" expanded="false" />
-            <element signature="e#2505#5018#0" expanded="false" />
+            <element signature="e#656#2583#0" expanded="false" />
+            <element signature="e#2622#5135#0" expanded="false" />
             <element signature="n#!!block;n#crcArcAdd#0" expanded="false" />
             <element signature="n#!!block;n#crcModbusHex#0" expanded="false" />
             <element signature="n#!!block;n#crcfunc#0" expanded="false" />
             <element signature="n#!!block;n#send_name#0" expanded="false" />
             <element signature="n#!!block;n#send_number#0" expanded="false" />
-            <element signature="e#7014#7237#0" expanded="false" />
+            <element signature="e#7131#7354#0" expanded="false" />
             <element signature="n#!!block;n#send_US#0" expanded="false" />
-            <element signature="n#!!block;n#send_archive_tsrv24#0" expanded="false" />
-            <element signature="n#!!block;n#send_OK#0" expanded="false" />
-            <element signature="n#!!block;n#send_Fail#0" expanded="false" />
-            <element signature="n#!!block;n#send_response_archive#0" expanded="false" />
-            <element signature="e#12048#12400#0" expanded="false" />
-            <element signature="n#!!block;n#assv_info#0" expanded="false" />
-            <element signature="e#12712#13189#0" expanded="false" />
-            <element signature="e#15523#16877#0" expanded="false" />
+            <element signature="e#8702#9050#0" expanded="false" />
+            <element signature="e#14142#14494#0" expanded="false" />
+            <element signature="n#!!block;n#assv_eeprom_read#0" expanded="false" />
+            <element signature="n#!!block;n#assv_flash_read#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_name#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_register#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#fill_modbus_archive_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_modbus_archive#0" expanded="false" />
+            <element signature="n#!!block;n#DLE_staff#0" expanded="false" />
+            <element signature="n#!!block;n#send_answer_modbus#0" expanded="false" />
+            <element signature="n#!!block;n#send_archive_schedule_tsrv24#0" expanded="false" />
+            <element signature="n#!!block;n#send_response_archive_schedule#0" expanded="false" />
+            <element signature="e#29053#29346#0" expanded="false" />
           </folding>
         </state>
       </provider>
