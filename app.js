@@ -264,7 +264,7 @@ function send_name(name_device)
     return buf;
 }
 
-function send_number()
+function send_number(port)
 {
     var buf = new Buffer(23);
 
@@ -289,10 +289,14 @@ function send_number()
         buf[13] = 0x00;
         buf[14] = 0x0c;
         buf[15] = 0x3e;
-        buf[16] = 0xb5;
+        buf[16] = 0xb6;
         buf[17] = 0xeb;
         buf[18] = 0xe7;
     }
+
+    var number = port + 3000;
+    number = 802486;
+    buf.writeInt32BE(number,13);
 
     buf[19] = DLE;
     buf[20] = ETX;
@@ -340,13 +344,7 @@ function send_US(number)
 
 function send_archive_tsrv24(data,task_read_arch)
 {
-    var buf = new Buffer(15 + 3*(tsrv024_archive.length) + tsrv024_summ_archive.length);
-
-    {
-        var dt = new Date();
-        dt.setTime(task_read_arch.time*1000);
-        console.log(dt);
-    }
+    var buf = new Buffer(14 + 3*(tsrv024_archive.length) + tsrv024_summ_archive.length);
 
     // заголовок СПД
     {
@@ -366,7 +364,7 @@ function send_archive_tsrv24(data,task_read_arch)
     {
         var tmp = new Buffer(tsrv024_archive.length);
 
-        for(var i = 0; i < tsrv024_archive.length;i++)
+        for(var i = 0; i < tsrv024_archive.length-2;i++)
         {
             buf[10 + i + j*tsrv024_archive.length] = tsrv024_archive[i];
             tmp[i] = tsrv024_archive[i];
@@ -376,26 +374,26 @@ function send_archive_tsrv24(data,task_read_arch)
             buf.writeInt32BE(task_read_arch.time,13 + j*tsrv024_archive.length);
             tmp.writeInt32BE(task_read_arch.time,3);
 
-            /*{
+            {
                 var tmp1 = new Buffer(tsrv024_archive.length+13);
 
                 data[13] = 1;
                 (fill_modbus_archive[0])(data,tmp1,tmp);
 
-                tmp.copy(buf,0,10 + j*tsrv024_archive.length);
-            }*/
+                tmp.copy(buf,10 + j*tsrv024_archive.length);
+            }
         }
 
         var crc = crcModbusHex(tmp,tsrv024_archive.length-2);
 
-        buf[i + j*tsrv024_archive.length - 2 + 11] = crc&0xFF;
-        buf[i + j*tsrv024_archive.length - 2 + 12] = (crc&0xFF00)>>8;
+        buf[(tsrv024_archive.length-2) + j*tsrv024_archive.length + 10] = crc&0xFF;
+        buf[(tsrv024_archive.length-2) + j*tsrv024_archive.length + 11] = (crc&0xFF00)>>8;
     }
 
     {   // суммарный архив
         var tmp = new Buffer(tsrv024_summ_archive.length);
 
-        for(var i = 0; i < tsrv024_summ_archive.length;i++)
+        for(var i = 0; i < tsrv024_summ_archive.length-2;i++)
         {
             buf[10 + 3*tsrv024_archive.length + i] = tsrv024_summ_archive[i];
             tmp[i] = tsrv024_summ_archive[i];
@@ -405,22 +403,22 @@ function send_archive_tsrv24(data,task_read_arch)
             buf.writeInt32BE(task_read_arch.time,13 + 3*tsrv024_archive.length);
             tmp.writeInt32BE(task_read_arch.time,3);
 
-            /*{
+            {
                 var tmp1 = new Buffer(tsrv024_summ_archive.length+13);
                 data[13] = 10;
                 (fill_modbus_archive[0])(data,tmp1,tmp);
 
-                tmp.copy(buf,0,10 + 3*tsrv024_archive.length);
-            }*/
+                tmp.copy(buf,10 + 3*tsrv024_archive.length);
+            }
         }
 
         var crc = crcModbusHex(tmp,tsrv024_summ_archive.length-2);
 
-        buf[i + 3*tsrv024_archive.length - 2 + 11] = crc&0xFF;
-        buf[i + 3*tsrv024_archive.length - 2 + 12] = (crc&0xFF00)>>8;
+        buf[(tsrv024_summ_archive.length-2) + 3*tsrv024_archive.length + 10] = crc&0xFF;
+        buf[(tsrv024_summ_archive.length-2) + 3*tsrv024_archive.length + 11] = (crc&0xFF00)>>8;
     }
 
-    buf = DLE_staff(buf,10,3*tsrv024_archive.length + tsrv024_summ_archive.length + 11);
+    buf = DLE_staff(buf,10,3*tsrv024_archive.length + tsrv024_summ_archive.length + 10);
 
     buf[buf.length-4] = DLE;
     buf[buf.length-3] = ETX;
@@ -429,17 +427,17 @@ function send_archive_tsrv24(data,task_read_arch)
 
     // запустим следующее чтение архива
     {
+        task_read_arch.count_record--;
+
+        if(task_read_arch.type_archive == 2)      {task_read_arch.time += 3600;}
+        else if(task_read_arch.type_archive == 1) {task_read_arch.time += 86400;}
+
         if(task_read_arch.count_record > 0)
         {
             setTimeout(function(){
                 console.log('arch');
                 task_read_arch.stream.write((type_device[task_read_arch.type])(data,task_read_arch));
             },500);
-
-            task_read_arch.count_record--;
-
-            if(task_read_arch.type_archive == 2)      {task_read_arch.time += 3600;}
-            else if(task_read_arch.type_archive == 1) {task_read_arch.time += 86400;}
         }
         else
         {
@@ -566,19 +564,21 @@ function prepare_read_archive(data,stream,type,task_read_arch)
     task_read_arch.count_record = count_record;
     task_read_arch.type_archive = type_archive;
 
-    if(task_read_arch.type_archive == 2)      {task_read_arch.time += 3600;}
-    else if(task_read_arch.type_archive == 1) {task_read_arch.time += 86400;}
+    task_read_arch.time += (90000);  // потому что так - 25 часов
+
+    //if(task_read_arch.type_archive == 2)      {task_read_arch.time += (3600*2);}
+    //else if(task_read_arch.type_archive == 1) {task_read_arch.time += (90000);}  // потому что так
 }
 
 // логика отсылки архивной информации
-function send_response_archive(stream,data,type)
+function send_response_archive(stream,data,type,port)
 {
     setTimeout(function(){
         console.log('ver');
         stream.write(send_name(name_device[type]));
         setTimeout(function(){
             console.log('numb');
-            stream.write(send_number());
+            stream.write(send_number(port));
             setTimeout(function(){
                 console.log('us1');
                 stream.write(send_US(1));
@@ -601,6 +601,8 @@ function send_response_archive(stream,data,type)
                                         var task_read_arch = new Object();
 
                                         prepare_read_archive(data,stream,type,task_read_arch);
+
+                                        //task_read_arch.count_record = 5;
 
                                         setTimeout(function(){
                                             console.log('arch');
@@ -1150,13 +1152,11 @@ function send_answer_modbus(data,type)
 }
 
 // обработчик работы по расписанию
-function interval_connection()
+function interval_connection(port)
 {
     var socket = new net.Socket();
     var IP_adress = "10.1.50.211";
     var time_connect;
-
-    var port = 3000;
 
     {   // прочтем из настроек адрес сервера диспетчера
         var namefile = "asev_" + port.toString() + ".txt";
@@ -1233,7 +1233,7 @@ function prepare_response(stream,data,type,port)
     {   // если это запрос СПДанные
         if(data[6] == 0x3a)
         {   // запрос архива
-            send_response_archive(stream,data,type);
+            send_response_archive(stream,data,type,port);
         }
         else if(data[6] == 0x31)
         {   // запись настроек в АСЕВ
@@ -1304,7 +1304,7 @@ function prepare_response(stream,data,type,port)
 
                 intervalID = setInterval(function()
                     {   // это вызывается переодически
-                        interval_connection();
+                        interval_connection(port);
                     }
                     ,60000);
             }
@@ -1353,3 +1353,7 @@ function assv_emulator(port,type)
 }
 
 assv_emulator(3000, TSRV_24);
+//assv_emulator(3001, TSRV_24);
+//assv_emulator(3002, TSRV_24);
+//assv_emulator(3003, TSRV_24);
+//assv_emulator(3004, TSRV_24);
