@@ -1351,8 +1351,7 @@ function assv_emulator(port,type)
     });
 }
 
-assv_emulator(3000, TSRV_24);
-//assv_emulator(3001, TSRV_24);
-//assv_emulator(3002, TSRV_24);
-//assv_emulator(3003, TSRV_24);
-//assv_emulator(3004, TSRV_24);
+for(var i = 0; i < 50; i++)
+{
+    assv_emulator(3000+i, TSRV_24);
+}
