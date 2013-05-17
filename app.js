@@ -295,7 +295,6 @@ function send_number(port)
     }
 
     var number = port + 3000;
-    number = 802486;
     buf.writeInt32BE(number,13);
 
     buf[19] = DLE;
