@@ -1,4 +1,4 @@
-
+﻿
 /**
  * Module dependencies.
  */
@@ -1351,7 +1351,7 @@ function assv_emulator(port,type)
     });
 }
 
-for(var i = 0; i < 50; i++)
+for(var i = 0; i < 5; i++)
 {
     assv_emulator(3000+i, TSRV_24);
 }
