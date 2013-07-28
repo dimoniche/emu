@@ -338,13 +338,13 @@ function send_US(number)
     return buf;
 }
 
-function send_archive_tsrv24(data,second_last)
+function send_archive_tsrv24(data,task_read_arch)
 {
-    var buf = new Buffer(15 + 3*(tsrv024_archive.length));
+    var buf = new Buffer(15 + 3*(tsrv024_archive.length) + tsrv024_summ_archive.length);
 
     {
         var dt = new Date();
-        dt.setTime(second_last*1000);
+        dt.setTime(task_read_arch.time*1000);
         console.log(dt);
     }
 
@@ -373,8 +373,8 @@ function send_archive_tsrv24(data,second_last)
         }
 
         {
-            buf.writeInt32BE(second_last,13);
-            tmp.writeInt32BE(second_last,3);
+            buf.writeInt32BE(task_read_arch.time,13 + j*tsrv024_archive.length);
+            tmp.writeInt32BE(task_read_arch.time,3);
 
             /*{
                 var tmp1 = new Buffer(tsrv024_archive.length+13);
@@ -401,13 +401,18 @@ function send_archive_tsrv24(data,second_last)
             tmp[i] = tsrv024_summ_archive[i];
         }
 
-        /*{
-            var tmp1 = new Buffer(tsrv024_summ_archive.length+13);
-            data[13] = 10;
-            (fill_modbus_archive[0])(data,tmp1,tmp);
+        {
+            buf.writeInt32BE(task_read_arch.time,13 + 3*tsrv024_archive.length);
+            tmp.writeInt32BE(task_read_arch.time,3);
 
-            tmp.copy(buf,0,10 + 3*tsrv024_archive.length);
-        }*/
+            /*{
+                var tmp1 = new Buffer(tsrv024_summ_archive.length+13);
+                data[13] = 10;
+                (fill_modbus_archive[0])(data,tmp1,tmp);
+
+                tmp.copy(buf,0,10 + 3*tsrv024_archive.length);
+            }*/
+        }
 
         var crc = crcModbusHex(tmp,tsrv024_summ_archive.length-2);
 
@@ -421,6 +426,29 @@ function send_archive_tsrv24(data,second_last)
     buf[buf.length-3] = ETX;
 
     crcfunc(buf,buf.length-2);
+
+    // запустим следующее чтение архива
+    {
+        if(task_read_arch.count_record > 0)
+        {
+            setTimeout(function(){
+                console.log('arch');
+                task_read_arch.stream.write((type_device[task_read_arch.type])(data,task_read_arch));
+            },500);
+
+            task_read_arch.count_record--;
+
+            if(task_read_arch.type_archive == 2)      {task_read_arch.time += 3600;}
+            else if(task_read_arch.type_archive == 1) {task_read_arch.time += 86400;}
+        }
+        else
+        {
+            setTimeout(function(){
+                console.log('OK');
+                task_read_arch.stream.write(send_OK());
+            },500);
+        }
+    }
 
     return buf;
 }
@@ -493,6 +521,55 @@ function send_Fail()
     return buf;
 }
 
+function prepare_read_archive(data,stream,type,task_read_arch)
+{
+    var type_archive = data[10];
+    var count_record = 0;
+
+    // избавимся от DLE стаффинга
+    var tmp_buf = new Buffer(16);
+
+    for(var i = 0,j = 0; j < 8;i++,j++)
+    {
+        if(data[11+i] == DLE) {i++;}
+        tmp_buf[j] = data[11+i];
+    }
+
+    var second_last = Date.UTC(tmp_buf[3]+2000,tmp_buf[2]-1,tmp_buf[1],tmp_buf[0],59,59)/1000;
+    var second_now  = Date.UTC(tmp_buf[7]+2000,tmp_buf[6]-1,tmp_buf[5],tmp_buf[4],59,59)/1000;
+
+    second_now  -= (second_now%3600);
+    second_last -= (second_last%3600);
+
+    if(type_archive == 0)   // архивы не считываются
+    {
+        setTimeout(function(){
+            console.log('OK');
+            stream.write(send_OK());
+        },500);
+
+        return;
+    }
+    else if(type_archive == 2) // часовые архивы
+    {   // часы
+        count_record = (second_now - second_last)/3600;
+    }
+    else if(type_archive == 1)  // суточные архивы
+    {   // сутки
+        count_record = (second_now - second_last)/86400;
+    }
+
+    // заполним задание на чтение архива
+    task_read_arch.stream       = stream;
+    task_read_arch.type         = type;
+    task_read_arch.time         = second_last;
+    task_read_arch.count_record = count_record;
+    task_read_arch.type_archive = type_archive;
+
+    if(task_read_arch.type_archive == 2)      {task_read_arch.time += 3600;}
+    else if(task_read_arch.type_archive == 1) {task_read_arch.time += 86400;}
+}
+
 // логика отсылки архивной информации
 function send_response_archive(stream,data,type)
 {
@@ -520,59 +597,15 @@ function send_response_archive(stream,data,type)
                                 setTimeout(function(){
                                     // узнаем сколько спросили архивов - столько и выдадим
                                     {
-                                        var type_archive = data[10];
-                                        var count_record = 0;
+                                        // задание на чтение архива
+                                        var task_read_arch = new Object();
 
-                                        // избавимся от DLE стаффинга
-                                        var tmp_buf = new Buffer(16);
+                                        prepare_read_archive(data,stream,type,task_read_arch);
 
-                                        for(var i = 0,j = 0; j < 8;i++,j++)
-                                        {
-                                            if(data[11+i] == DLE) {i++;}
-                                            tmp_buf[j] = data[11+i];
-                                        }
-
-                                        var second_last = Date.UTC(tmp_buf[3]+2000,tmp_buf[2]-1,tmp_buf[1],tmp_buf[0],59,59)/1000;
-                                        var second_now  = Date.UTC(tmp_buf[7]+2000,tmp_buf[6]-1,tmp_buf[5],tmp_buf[4],59,59)/1000;
-
-                                        second_now  -= (second_now%3600);
-                                        second_last -= (second_last%3600);
-
-                                        if(type_archive == 0)   // архивы не считываются
-                                        {
-                                            setTimeout(function(){
-                                                console.log('OK');
-                                                stream.write(send_OK());
-                                            },500);
-
-                                            return;
-                                        }
-                                        else if(type_archive == 2) // часовые архивы
-                                        {   // часы
-                                            count_record = (second_now - second_last)/3600;
-                                        }
-                                        else if(type_archive == 1)  // суточные архивы
-                                        {   // сутки
-                                            count_record = (second_now - second_last)/86400;
-                                        }
-
-                                        //count_record = 1;
-
-                                        for(i = 0; i < count_record; i++)
-                                        {
-                                            if(type_archive == 2)      {second_last += 3600;}
-                                            else if(type_archive == 1) {second_last += 86400;}
-
-                                            stream.write((type_device[type])(data,second_last));
-
-                                            if(i == count_record - 1)
-                                            {   // все закончили посылать
-                                                setTimeout(function(){
-                                                    console.log('OK');
-                                                    stream.write(send_OK());
-                                                },500 + i*500);
-                                            }
-                                        }
+                                        setTimeout(function(){
+                                            console.log('arch');
+                                            stream.write((type_device[type])(data,task_read_arch));
+                                        },500);
                                     }
                                 },500);
                             },500);
@@ -1218,6 +1251,10 @@ function prepare_response(stream,data,type,port)
                 stream.write(send_OK());
             },500);
         }
+        else if(data[6] == 0x82)
+        {   //
+            //server.end();
+        }
         else if(data[6] == 0x89)
         {   // включение расписания
             var namefile = "asev_shed_" + port.toString() + ".txt";
@@ -1259,14 +1296,9 @@ function prepare_response(stream,data,type,port)
 
 function assv_emulator(port,type)
 {
-    /*intervalID = setInterval(function()
-        {   // это вызывается переодически
-            interval_connection();
-        }
-        ,30000);*/
+    var busy = 0;       // сервер занят
 
-    var server;
-    server = net.createServer(function (stream) {
+    var server = net.createServer(function (stream) {
         console.log('server connected');
 
         stream.on('data', function (data) {
