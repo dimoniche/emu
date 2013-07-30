@@ -1154,6 +1154,7 @@ function interval_connection()
 {
     var socket = new net.Socket();
     var IP_adress = "10.1.50.211";
+    var time_connect;
 
     var port = 3000;
 
@@ -1164,13 +1165,38 @@ function interval_connection()
 
         // прочитаем данные из файла
         var file_handle = fs.openSync(namefile, "r", 0644);
+
+        // прочтем время коннекта с сервером
+        count = fs.readSync(file_handle, file, 0, 2, 0x217);
+        var curr_time = new Date();
+
+        if(curr_time.getHours() == file.readUInt8(1))
+        {   // час совпал
+            if(curr_time.getMinutes() == file.readUInt8(0))
+            {   // минуты совпали
+                console.log("старт расписания");
+            }
+            else {fs.closeSync(file_handle);return;}
+        }
+        else {fs.closeSync(file_handle);return;}
+
         var count = fs.readSync(file_handle, file, 0, 9, 0x200);
 
         string = file.toString();
         port = parseInt(string);
+
+        // прочтем IP адрес сервака
+        count = fs.readSync(file_handle, file, 0, 4, 0x22A);
+
+        IP_adress = file.readUInt8(0).toString() + '.'
+            + file.readUInt8(1).toString() + '.'
+            + file.readUInt8(2).toString() + '.'
+            + file.readUInt8(3).toString();
+
+        fs.closeSync(file_handle);
     }
 
-    console.log("старт расписания");
+    console.log(IP_adress);
 
     socket.connect(2060,IP_adress,function (connection) {
         console.log('Socket connected to port %s', 2060);
